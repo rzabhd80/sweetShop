@@ -36,4 +36,41 @@ class UserTest extends TestCase
         $response->assertOk();
         $this->assertDatabaseCount(User::find(1), 1);
     }
+    public function test_name_exists()
+    {
+        $response  = $this->postJson("/api/auth/register", [
+            "lastname" => "something",
+            "email" => "something@something.com",
+            "password" => "some random password"
+        ]);
+        $response->assertJsonValidationErrorFor("name");
+    }
+    public function test_lastname_exists()
+    {
+        $response = $this->postJson("/api/auth/register", [
+            "name" => "something",
+            "email" => "something@something.com",
+            "password" => "something random as password"
+        ]);
+        $response->assertJsonValidationErrors("lastname");
+    }
+    public function test_email_exists()
+    {
+        $response = $this->postJson("/api/auth/register", [
+            "name" => "something",
+            "lastname" => "something rand",
+            "password" => "something random as password"
+        ]);
+        $response->assertJsonValidationErrors("email");
+    }
+    public function test_proper_password_exists()
+    {
+        $response = $this->postJson("/api/auth/register", [
+            "name" => "something",
+            "lastname" => "something rand",
+            "lastname" => "email@email.com",
+            "password"=>"wtf"
+        ]);
+        $response->assertJsonValidationErrors("password");
+    }
 }
