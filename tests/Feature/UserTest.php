@@ -69,11 +69,17 @@ class UserTest extends TestCase
     }
     public function test_user_login()
     {
+        $user = User::create([
+            "name" => "temp_name",
+            "lastname" => "temp_lastname",
+            "email" => "temp@gmail.com",
+            "password" => Hash::make("temp_password")
+        ]);
         $request = $this->post("/api/auth/login", [
-            "email" => "randomEmail@gmail.com",
-            "password" => "rand_pass"
+            "email" => $user->email,
+            "password" => "temp_password"
         ]);
         $request->assertOk();
-        $request->assertJsonStructure(["token"]);
+        $request->assertJsonStructure(["message","token"]);
     }
 }
