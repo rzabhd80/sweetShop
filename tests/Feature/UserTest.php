@@ -80,6 +80,23 @@ class UserTest extends TestCase
             "password" => "temp_password"
         ]);
         $request->assertOk();
-        $request->assertJsonStructure(["message","token"]);
+        $request->assertJsonStructure(["message", "token"]);
+    }
+    public function test_user_logout()
+    {
+        $user = User::create([
+            "name" => "temp_name",
+            "lastname" => "temp_lastname",
+            "email" => "temp@gmail.com",
+            "password" => Hash::make("temp_password")
+        ]);
+        $login_user = $this->post("/api/auth/login", [
+            "email" => $user->email,
+            "password" => "temp_password"
+        ]);
+        $login_user->assertOk();
+        $request = $this->actingAs($user, "auth:sanctum")->post("/api/auth/logout");
+        $request->assertOk();
+        $request->assertJsonStructure(["message" => "successfully logged out"]);
     }
 }
