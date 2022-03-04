@@ -33,4 +33,20 @@ class UserController extends Controller
         else
             return response()->json(["message" => "something went wrong"], 400);
     }
+    public function login()
+    {
+        $checked = request()->validate([
+            "email" => "required|email",
+            "password" => "required"
+        ]);
+        $user = User::where("email", $checked["email"])->first();
+        if ($user == null)
+            return response()->json([
+                "message" => "user not found"
+            ], 404);
+        if (Hash::check($checked["password"], $user->password)) {
+            $token = $user->createToken()->plainTextToken("auth_token");
+            return response()->json(["message" => "successfully logged in", "token" => $token]);
+        } else return response()->json(["message" => "incorrect password"]);
+    }
 }
