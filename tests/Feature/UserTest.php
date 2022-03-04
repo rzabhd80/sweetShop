@@ -63,8 +63,17 @@ class UserTest extends TestCase
             "name" => "something",
             "lastname" => "something rand",
             "lastname" => "email@email.com",
-            "password"=>"wtf"
+            "password" => "wtf"
         ]);
         $response->assertJsonValidationErrors("password");
+    }
+    public function test_user_login()
+    {
+        $request = $this->post("/api/auth/login", [
+            "email" => "randomEmail@gmail.com",
+            "password" => "rand_pass"
+        ]);
+        $request->assertOk();
+        $request->assertJsonStructure(["token"]);
     }
 }
