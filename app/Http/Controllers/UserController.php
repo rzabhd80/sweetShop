@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -33,6 +34,8 @@ class UserController extends Controller
         else
             return response()->json(["message" => "something went wrong"], 400);
     }
+
+
     public function login()
     {
         $checked = request()->validate([
@@ -47,6 +50,17 @@ class UserController extends Controller
         if (Hash::check($checked["password"], $user->password)) {
             $token = $user->createToken("auth_token")->plainTextToken;
             return response()->json(["message" => "successfully logged in", "token" => $token], 200);
+            Auth::login($user);
         } else return response()->json(["message" => "incorrect password"], 403);
+    }
+
+
+
+    public function logout()
+    {
+        $user = User::where("email",Auth::user()->email)->first();
+        Auth::logout();
+        $user->tokens = null;
+        $user->save();
     }
 }
