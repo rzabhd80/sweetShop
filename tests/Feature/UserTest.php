@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -84,6 +85,7 @@ class UserTest extends TestCase
     }
     public function test_user_logout()
     {
+        $this->withoutExceptionHandling();
         $user = User::create([
             "name" => "temp_name",
             "lastname" => "temp_lastname",
@@ -95,8 +97,9 @@ class UserTest extends TestCase
             "password" => "temp_password"
         ]);
         $login_user->assertOk();
-        $request = $this->actingAs($user, "web")->post("/api/auth/logout");
+        Auth::login($user);
+        $request = $this->post("/api/auth/logout");
         $request->assertOk();
-        $request->assertJsonStructure(["message" => "successfully logged out"]);
+        $request->assertJsonStructure(["message"]);
     }
 }
