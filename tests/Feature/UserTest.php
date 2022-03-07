@@ -95,7 +95,7 @@ class UserTest extends TestCase
             "password" => "temp_password"
         ]);
         $login_user->assertOk();
-        $request = $this->actingAs($user, "auth:sanctum")->post("/api/auth/logout");
+        $request = $this->actingAs($user, "web")->post("/api/auth/logout");
         $request->assertOk();
         $request->assertJsonStructure(["message" => "successfully logged out"]);
     }
