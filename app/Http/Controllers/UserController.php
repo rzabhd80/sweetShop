@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PharIo\Manifest\Email;
 
 class UserController extends Controller
 {
@@ -29,9 +31,10 @@ class UserController extends Controller
         $user->email = $checked["email"];
         $user->password = Hash::make($checked["password"]);
         $user->save();
-        if ($user != null)
+        if ($user != null) {
+            Mail::to(request()->user())->send(new WelcomeMail($user));
             return response()->json(["message" => "user successfully created"], 200);
-        else
+        } else
             return response()->json(["message" => "something went wrong"], 400);
     }
 

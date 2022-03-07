@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix("/auth")->group(function(){
-    Route::post("/register",[UserController::class,"register"]);
-    Route::post("/login",[UserController::class,"login"]);
-    Route::post("/logout",[UserController::class,"logout"])->middleware("auth:sanctum");
+
+Route::get("/email/verify/{id}", [VerificationController::class, "verify"])->name("verification.verify");
+Route::get("email/resend", [VerificationController::class, "resend"])->name("verification.resend");
+
+Route::prefix("/auth")->group(function () {
+    Route::post("/register", [UserController::class, "register"]);
+    Route::post("/login", [UserController::class, "login"]);
+    Route::post("/logout", [UserController::class, "logout"])->middleware("auth:sanctum");
 });
