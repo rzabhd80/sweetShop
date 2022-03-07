@@ -58,9 +58,9 @@ class UserController extends Controller
 
     public function logout()
     {
-        $user = User::where("email", Auth::user()->email)->first();
+        $user = User::where("email", request()->user()->email)->first();
         $user->tokens()->delete();
-        $user->logout();
         $user->save();
+        return response()->json(["message" => "successfully logged out"], 200);
     }
 }
