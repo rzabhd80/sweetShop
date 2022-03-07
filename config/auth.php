@@ -64,7 +64,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+            'hash' => false,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
