@@ -24,7 +24,8 @@ class UserController extends Controller
             "email" => "required|unique:users,email",
             "password" => "required|min:8"
         ]);
-
+        if (!$checked)
+            return response()->json(["message" => "credintials do not match"]);
         $user = new User();
         $user->name = $checked["name"];
         $user->lastname = $checked["lastname"];
@@ -32,7 +33,7 @@ class UserController extends Controller
         $user->password = Hash::make($checked["password"]);
         $user->save();
         if ($user != null) {
-            Mail::to(request()->user())->send(new WelcomeMail($user));
+            // Mail::to(request()->user())->send(new WelcomeMail($user));
             return response()->json(["message" => "user successfully created"], 200);
         } else
             return response()->json(["message" => "something went wrong"], 400);
