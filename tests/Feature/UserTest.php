@@ -119,4 +119,20 @@ class UserTest extends TestCase
         $response->assertOk();
         $this->assertTrue(Hash::check("fake_password", auth()->user()->password));
     }
+    public function test_update_user_email()
+    {
+        $user = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "fake1@email.com",
+            "password" => Hash::make("fake_password")
+        ]);
+        Auth::login($user);
+        $request = $this->actingAs($user, "web")->put("api/users/edit_email", [
+            "new_email" => "fake2@gmail.com"
+        ]);
+        $request->assertOk();
+        $content = $request->decodeResponseJson();
+        $this->assertEquals($content["new email"],"fake2@gmail.com");
+    }
 }
