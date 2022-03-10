@@ -105,7 +105,12 @@ class UserTest extends TestCase
 
     public function test_user_update_password()
     {
-        $user = User::find(1);
+        $user = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "fake@gmail.com",
+            "password" => Hash::make("fake_password")
+        ]);
         $this->withoutExceptionHandling();
         $response = $this->actingAs($user, "web")->patch("/users/edit_password", [
             "old_password" => "old_password",
