@@ -24,3 +24,8 @@ Route::prefix("/auth")->group(function () {
     Route::post("/login", [UserController::class, "login"]);
     Route::post("/logout", [UserController::class, "logout"])->middleware("auth:sanctum");
 });
+
+Route::prefix("/users")->group(function () {
+
+    Route::get("/edit_password", [UserController::class, "edit_pass"]);
+});

@@ -67,4 +67,12 @@ class UserController extends Controller
         $user->save();
         return response()->json(["message" => "successfully logged out"], 200);
     }
+
+    public function user_update()
+    {
+        request()->validate([
+            "password_old" => "required",
+            "new_password" => "required|min:8"
+        ]);
+    }
 }

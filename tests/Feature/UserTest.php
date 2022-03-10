@@ -102,4 +102,13 @@ class UserTest extends TestCase
         $request->assertOk();
         $request->assertJsonStructure(["message"]);
     }
+
+    public function test_user_update_password()
+    {
+        $response = $this->patch("/users/edit_password", [
+            "password" => "new_password"
+        ]);
+        $response->assertOk();
+        $this->assertTrue(Hash::check("new_password", auth()->user()->password));
+    }
 }
