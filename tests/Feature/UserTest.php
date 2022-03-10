@@ -105,8 +105,9 @@ class UserTest extends TestCase
 
     public function test_user_update_password()
     {
+        $user = User::find(1);
         $this->withoutExceptionHandling();
-        $response = $this->patch("/users/edit_password", [
+        $response = $this->actingAs($user, "web")->patch("/users/edit_password", [
             "old_password" => "old_password",
             "password" => "new_password"
         ]);
