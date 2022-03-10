@@ -111,12 +111,12 @@ class UserTest extends TestCase
             "email" => "fake@gmail.com",
             "password" => Hash::make("fake_password")
         ]);
-        $this->withoutExceptionHandling();
-        $response = $this->actingAs($user, "web")->patch("/users/edit_password", [
-            "old_password" => "old_password",
-            "password" => "new_password"
+        auth()->login($user);
+        $response = $this->actingAs($user, "web")->put("api/users/edit_password", [
+            "password_old" => "old_password",
+            "new_password" => "new_password"
         ]);
         $response->assertOk();
-        $this->assertTrue(Hash::check("new_password", auth()->user()->password));
+        $this->assertTrue(Hash::check("fake_password", auth()->user()->password));
     }
 }
