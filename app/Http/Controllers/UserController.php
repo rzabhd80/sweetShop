@@ -83,4 +83,21 @@ class UserController extends Controller
             "message" => "password successfully updated",
         ], 200);
     }
+    public function edit_email()
+    {
+        $checked = request()->validate([
+            "new_email" => "required|unique:users,email"
+        ]);
+        $user = User::where("email", auth()->user()->email)->first();
+        if ($user == null)
+            return response()->json([
+                "message" => "user not found"
+            ], 404);
+        $user->email = $checked["new_email"];
+        $user->save();
+        return response()->json([
+            "message" => "email successfully updated",
+            "new email" => $user->email
+        ], 200);
+    }
 }
