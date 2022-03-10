@@ -105,7 +105,9 @@ class UserTest extends TestCase
 
     public function test_user_update_password()
     {
+        $this->withoutExceptionHandling();
         $response = $this->patch("/users/edit_password", [
+            "old_password" => "old_password",
             "password" => "new_password"
         ]);
         $response->assertOk();

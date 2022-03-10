@@ -26,6 +26,5 @@ Route::prefix("/auth")->group(function () {
 });
 
 Route::prefix("/users")->group(function () {
-
     Route::get("/edit_password", [UserController::class, "edit_pass"]);
 });

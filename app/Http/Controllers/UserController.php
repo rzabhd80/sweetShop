@@ -68,7 +68,7 @@ class UserController extends Controller
         return response()->json(["message" => "successfully logged out"], 200);
     }
 
-    public function user_update()
+    public function edit_pass()
     {
         request()->validate([
             "password_old" => "required",
