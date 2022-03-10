@@ -70,9 +70,17 @@ class UserController extends Controller
 
     public function edit_pass()
     {
-        request()->validate([
+        $checked =  request()->validate([
             "password_old" => "required",
             "new_password" => "required|min:8"
         ]);
+        $user = User::where("email", auth()->user()->email)->first();
+        if ($user == null)
+            return response()->json(["message" => "user not found"], 403);
+        $user->password = $checked["new_password"];
+        $user->save();
+        return response()->json([
+            "message" => "password successfully updated",
+        ], 201);
     }
 }
