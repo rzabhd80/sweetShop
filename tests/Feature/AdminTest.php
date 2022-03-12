@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -23,9 +25,9 @@ class AdminTest extends TestCase
             "lastname" => "rand_lastname",
             "email" => "rand@gmail.com",
             "password" => Hash::make("something random"),
-            "role" => "ADMIN"
         ]);
-        $request = $this->post("/api/admin/new_product", [
+        $user->role = "ADMIN";
+        $request = $this->actingAs($user, "web")->post("/api/admin/new_product", [
             "product_name" => "fake_name",
             "available" => "true",
             "available_number" => "210"
