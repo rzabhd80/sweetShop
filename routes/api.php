@@ -30,3 +30,7 @@ Route::prefix("/users")->group(function () {
     Route::put("/edit_password", [UserController::class, "edit_pass"]);
     Route::put("/edit_email", [UserController::class, "edit_email"]);
 });
+
+Route::prefix("/admin")->middleware("checkRole")->group(function () {
+    Route::get("/new_product", [\App\Http\Controllers\AdminController::class, "addProduct"]);
+});

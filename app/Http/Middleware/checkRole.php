@@ -16,7 +16,7 @@ class checkRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user->role == "ADMIN")
+        if ($request->user()->role == "ADMIN")
             return $next($request);
     }
 }
