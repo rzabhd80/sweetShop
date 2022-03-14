@@ -13,11 +13,6 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_add_product()
     {
         $user = User::create([
@@ -27,6 +22,7 @@ class AdminTest extends TestCase
             "password" => Hash::make("something random"),
         ]);
         $user->role = "ADMIN";
+        dd($user);
         $request = $this->actingAs($user, "web")->post("/api/admin/new_product", [
             "product_name" => "fake_name",
             "available" => "true",

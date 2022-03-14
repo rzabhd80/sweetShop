@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
 
-    public function addProduct()
+    public function addProduct(): \Illuminate\Http\JsonResponse
     {
         $checked = \request()->validate([
             "product_name" => "required",
