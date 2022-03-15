@@ -30,4 +30,30 @@ class AdminTest extends TestCase
         $request->assertStatus(201);
         $this->assertDatabaseCount(Product::find(1), 1);
     }
+
+    public function test_edit_product()
+    {
+        $user = User::create([
+            "name" => "rand_name",
+            "lastname" => "rand_lastname",
+            "email" => "rand@gmail.com",
+            "password" => Hash::make("something random")
+        ]);
+        $product = Product::create([
+            "product_name" => "fake_name",
+            "available" => 1,
+            "available_number" => "210"
+        ]);
+        $id = $product->save();
+        $user->role = "ADMIN";
+        $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/{id}", [
+            "new_name" => "new_name",
+            "available" => 1,
+            "available_number" => 20
+        ]);
+        $request->assertOk();
+        $found_product = Product::find($id);
+        $this->assertTrue($found_product->name == "new_name" && $found_product->available == 1
+            && "available_number" == 20);
+    }
 }
