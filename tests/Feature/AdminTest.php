@@ -44,16 +44,16 @@ class AdminTest extends TestCase
             "available" => 1,
             "available_number" => "210"
         ]);
-        $id = $product->save();
+        $product->save();
         $user->role = "ADMIN";
-        $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/1", [
+        $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/$product->id", [
             "new_name" => "new_name",
             "available" => 1,
             "available_number" => 20
         ]);
         $request->assertOk();
-        $found_product = Product::find($id);
+        $found_product = Product::find($product->id);
         $this->assertTrue($found_product->name == "new_name" && $found_product->available == 1
-            && "available_number" == 20);
+            && $found_product->available_number == 20);
     }
 }

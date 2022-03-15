@@ -29,7 +29,7 @@ class AdminController extends Controller
     public function edit_product($id)
     {
         $check = \request()->validate([
-            "new_name" => "required,min:3",
+            "new_name" => "required|min:3",
             "available" => "required",
             "available_number" => "required|int"
         ]);
@@ -39,6 +39,6 @@ class AdminController extends Controller
         $product->name = $check["new_name"];
         $product->available = $check["available"];
         $product->available_number = $check["available_number"];
-
+        $product->save();
     }
 }
