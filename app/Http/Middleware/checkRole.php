@@ -12,13 +12,13 @@ class checkRole
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function handle(Request $request, Closure $next): \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+    public function handle(Request $request, Closure $next)
     {
         if ($request->user()->role == "ADMIN") {
             return $next($request);
         }
-        return back();
+        return response()->json(["message" => "unauthorized"], 403);
     }
 }
