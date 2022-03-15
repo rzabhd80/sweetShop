@@ -28,7 +28,6 @@ class AdminTest extends TestCase
             "available_number" => "210"
         ]);
         $request->assertStatus(201);
-        Product::create([$request]);
         $this->assertDatabaseCount(Product::find(1), 1);
     }
 }
