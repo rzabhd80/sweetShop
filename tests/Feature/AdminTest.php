@@ -40,7 +40,7 @@ class AdminTest extends TestCase
             "password" => Hash::make("something random")
         ]);
         $product = Product::create([
-            "product_name" => "fake_name",
+            "name" => "fake_name",
             "available" => 1,
             "available_number" => "210"
         ]);
