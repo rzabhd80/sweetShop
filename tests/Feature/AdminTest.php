@@ -46,7 +46,7 @@ class AdminTest extends TestCase
         ]);
         $id = $product->save();
         $user->role = "ADMIN";
-        $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/{id}", [
+        $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/1", [
             "new_name" => "new_name",
             "available" => 1,
             "available_number" => 20

@@ -25,4 +25,20 @@ class AdminController extends Controller
             "message" => "product successfully added"
         ], 201);
     }
+
+    public function edit_product($id)
+    {
+        $check = \request()->validate([
+            "new_name" => "required,min:3",
+            "available" => "required",
+            "available_number" => "required|int"
+        ]);
+        $product = Product::find($id);
+        if ($product == null)
+            return response()->json(["message" => "product not found"], 404);
+        $product->name = $check["new_name"];
+        $product->available = $check["available"];
+        $product->available_number = $check["available_number"];
+
+    }
 }

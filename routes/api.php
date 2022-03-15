@@ -33,4 +33,5 @@ Route::prefix("/users")->group(function () {
 
 Route::prefix("/admin")->middleware("adminRole")->group(function () {
     Route::post("/new_product", [\App\Http\Controllers\AdminController::class, "addProduct"]);
+    Route::put("/edit_product/{1}", [\App\Http\Controllers\AdminController::class, "edit_product"]);
 });
