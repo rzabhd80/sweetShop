@@ -22,10 +22,9 @@ class AdminTest extends TestCase
             "password" => Hash::make("something random"),
         ]);
         $user->role = "ADMIN";
-        dd($user);
         $request = $this->actingAs($user, "web")->post("/api/admin/new_product", [
             "product_name" => "fake_name",
-            "available" => "true",
+            "available" => 1,
             "available_number" => "210"
         ]);
         $request->assertStatus(201);
