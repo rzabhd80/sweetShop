@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -52,5 +54,24 @@ class AdminController extends Controller
             $product->delete();
             return response()->json(['product deleted'], 200);
         }
+    }
+
+    public function addUser(): \Illuminate\Http\JsonResponse
+    {
+        $check = \request()->validate([
+            "name" => "required",
+            "lastname" => "required",
+            "email" => "required|email|unique:users,email",
+            "password" => "required|min:8",
+        ]);
+        $user = new User([
+            "name" => $check["name"],
+            "lastname" => $check["lastname"],
+            "email" => $check["email"],
+            "password" => Hash::make($check["password"]),
+        ]);
+        $user->role = "USER";
+        $user->save();
+        return response()->json(["message" => "user successfully created"], 200);
     }
 }
