@@ -78,4 +78,24 @@ class AdminTest extends TestCase
         $request->assertOk();
         $this->assertDatabaseCount($product, 0);
     }
+
+    public function test_add_user()
+    {
+        $admin = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "fake_email@email.com",
+            "password" => Hash::make("password"),
+            "role" => "ADMIN"
+        ]);
+        $request = $this->actingAs($admin, "web")->post("/api/admin/add_user", [
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "sthRand@gmail.com",
+            "password" => Hash::make("sthRandAsPassword"),
+        ]);
+        $request->assertOk();
+        $user = User::where("email", "sthRand@gmail.com")->first();
+        $this->assertNotNull($user);
+    }
 }
