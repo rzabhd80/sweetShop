@@ -35,4 +35,5 @@ Route::prefix("/admin")->middleware("adminRole")->group(function () {
     Route::post("/new_product", [\App\Http\Controllers\AdminController::class, "addProduct"]);
     Route::put("/edit_product/{id}", [\App\Http\Controllers\AdminController::class, "edit_product"]);
     Route::delete("/delete_product/{id}", [\App\Http\Controllers\AdminController::class, "delete_product"]);
+    Route::post("/add_user", [\App\Http\Controllers\AdminController::class, "addUser"]);
 });
