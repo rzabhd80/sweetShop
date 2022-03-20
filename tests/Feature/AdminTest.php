@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\AdminController;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,5 +56,26 @@ class AdminTest extends TestCase
         $found_product = Product::find($product->id);
         $this->assertTrue($found_product->name == "new_name" && $found_product->available == 1
             && $found_product->available_number == 20);
+    }
+
+    public function test_delete_product()
+    {
+        $user = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "fake_email",
+            "password" => "fake_password"
+        ]);
+        $user->role = "ADMIN";
+        $user->save();
+        $product = Product::create([
+            "name" => "fake_name",
+            "available" => 1,
+            "available_number" => "210"
+        ]);
+        $product->save();
+        $request = $this->actingAs($user, "web")->delete("api/admin/delete_product/$product->id");
+        $request->assertOk();
+        $this->assertDatabaseCount($product, 0);
     }
 }
