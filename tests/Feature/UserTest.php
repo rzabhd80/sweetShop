@@ -156,4 +156,18 @@ class UserTest extends TestCase
         $req->assertOk();
         $this->assertTrue(10, $product->available_count);
     }
+
+    public function test_buy_unavailable_count()
+    {
+        $user = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "sthRand@gmail.com",
+            "password" => Hash::make("sthRandAsPass")
+        ]);
+        $req = $this->actingAs($user, "web")->post([
+            "product_id" => "1",
+        ]);
+        $req->assertStatus(404);
+    }
 }
