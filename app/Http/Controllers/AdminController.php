@@ -15,12 +15,14 @@ class AdminController extends Controller
         $checked = \request()->validate([
             "product_name" => "required",
             "available" => "required",
-            "available_number" => "required"
+            "available_number" => "required",
+            "price" => "required|integer"
         ]);
         $product = Product::create([
             "name" => $checked["product_name"],
             "available" => $checked["available"],
-            "available_number" => $checked["available_number"]
+            "available_number" => $checked["available_number"],
+            "price" => $checked["price"]
         ]);
         $product->save();
         return response()->json([
@@ -33,7 +35,8 @@ class AdminController extends Controller
         $check = \request()->validate([
             "new_name" => "required|min:3",
             "available" => "required",
-            "available_number" => "required|int"
+            "available_number" => "required|int",
+            "price" => "required|integer"
         ]);
         $product = Product::find($id);
         if ($product == null)
@@ -41,6 +44,7 @@ class AdminController extends Controller
         $product->name = $check["new_name"];
         $product->available = $check["available"];
         $product->available_number = $check["available_number"];
+        $product->price = $check["price"];
         $product->save();
         return response()->json(["product edited"], 200);
     }

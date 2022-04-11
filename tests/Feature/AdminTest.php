@@ -26,7 +26,8 @@ class AdminTest extends TestCase
         $request = $this->actingAs($user, "web")->post("/api/admin/new_product", [
             "product_name" => "fake_name",
             "available" => 1,
-            "available_number" => "210"
+            "available_number" => "210",
+            "price" => "1000"
         ]);
         $request->assertStatus(201);
         $this->assertDatabaseCount(Product::find(1), 1);
@@ -43,14 +44,16 @@ class AdminTest extends TestCase
         $product = Product::create([
             "name" => "fake_name",
             "available" => 1,
-            "available_number" => "210"
+            "available_number" => "210",
+            "price" => "1000"
         ]);
         $product->save();
         $user->role = "ADMIN";
         $request = $this->actingAs($user, "web")->put("/api/admin/edit_product/$product->id", [
             "new_name" => "new_name",
             "available" => 1,
-            "available_number" => 20
+            "available_number" => 20,
+            "price" => "1000"
         ]);
         $request->assertOk();
         $found_product = Product::find($product->id);
@@ -71,7 +74,8 @@ class AdminTest extends TestCase
         $product = Product::create([
             "name" => "fake_name",
             "available" => 1,
-            "available_number" => "210"
+            "available_number" => "210",
+            "price" => "1000"
         ]);
         $product->save();
         $request = $this->actingAs($user, "web")->delete("api/admin/delete_product/$product->id");

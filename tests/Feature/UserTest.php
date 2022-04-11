@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -133,6 +134,26 @@ class UserTest extends TestCase
         ]);
         $request->assertOk();
         $content = $request->decodeResponseJson();
-        $this->assertEquals($content["new email"],"fake2@gmail.com");
+        $this->assertEquals($content["new email"], "fake2@gmail.com");
+    }
+    public function test_buy_available_product()
+    {
+        $user = User::create([
+            "name" => "fake_name",
+            "lastname" => "fake_lastname",
+            "email" => "sthRand@gmail.com",
+            "password" => Hash::make("sthRandAsPass")
+        ]);
+        $product = Product::create([
+            "name" => "produnt_name",
+            "available" => 1,
+            "available_number" => 11,
+            "price" => "1000"
+        ]);
+        $req = $this->actingAs($user, "web")->post("/api/user/buy_product", [
+            "product_id"
+        ]);
+        $req->assertOk();
+        $this->assertTrue(10, $product->available_count);
     }
 }

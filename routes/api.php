@@ -29,6 +29,7 @@ Route::prefix("/auth")->group(function () {
 Route::prefix("/users")->group(function () {
     Route::put("/edit_password", [UserController::class, "edit_pass"]);
     Route::put("/edit_email", [UserController::class, "edit_email"]);
+    Route::post("/buy_product", [UserController::class, "buy_product"]);
 });
 
 Route::prefix("/admin")->middleware("adminRole")->group(function () {
