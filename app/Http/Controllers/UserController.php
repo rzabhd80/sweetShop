@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMail;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Js;
 use PharIo\Manifest\Email;
 
 class UserController extends Controller
@@ -99,5 +101,15 @@ class UserController extends Controller
             "message" => "email successfully updated",
             "new email" => $user->email
         ], 200);
+    }
+    public function buy_product($id)
+    {
+        $product = Product::find($id);
+        if ($product) {
+            $product->available_count -= 1;
+            return response()->json(["message" => "product bought"], 200);
+        } else {
+            return response()->json(["message" => "product not found"], 400);
+        }
     }
 }
