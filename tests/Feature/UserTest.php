@@ -136,7 +136,8 @@ class UserTest extends TestCase
         $content = $request->decodeResponseJson();
         $this->assertEquals($content["new email"], "fake2@gmail.com");
     }
-    public function test_buy_available_product()
+
+    public function test_but_available_product()
     {
         $user = User::create([
             "name" => "fake_name",
@@ -145,29 +146,17 @@ class UserTest extends TestCase
             "password" => Hash::make("sthRandAsPass")
         ]);
         $product = Product::create([
-            "name" => "produnt_name",
+            "name" => "product_name",
             "available" => 1,
             "available_number" => 11,
             "price" => "1000"
         ]);
-        $req = $this->actingAs($user, "web")->post("/api/user/buy_product", [
-            "product_id"
+        $product->save();
+        $req = $this->actingAs($user, "web")->post("/api/users/buy_product", [
+            "product_id" => $product->id,
         ]);
         $req->assertOk();
-        $this->assertTrue(10, $product->available_count);
-    }
-
-    public function test_buy_unavailable_count()
-    {
-        $user = User::create([
-            "name" => "fake_name",
-            "lastname" => "fake_lastname",
-            "email" => "sthRand@gmail.com",
-            "password" => Hash::make("sthRandAsPass")
-        ]);
-        $req = $this->actingAs($user, "web")->post([
-            "product_id" => "1",
-        ]);
-        $req->assertStatus(404);
+        $res_product = Product::find($product->id);
+        $this->assertEquals(10, $res_product->available_number);
     }
 }

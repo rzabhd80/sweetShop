@@ -109,7 +109,8 @@ class UserController extends Controller
         ]);
         $product = Product::find($checked["product_id"]);
         if ($product) {
-            $product->available_count -= 1;
+            $product->available_number -= 1;
+            $product->save();
             return response()->json(["message" => "product bought"], 200);
         } else {
             return response()->json(["message" => "product not found"], 400);
