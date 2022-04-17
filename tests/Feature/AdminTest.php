@@ -79,7 +79,7 @@ class AdminTest extends TestCase
             "price" => "1000"
         ]);
         $product->save();
-        $request = $this->actingAs($user, "web")->delete("api/admin/delete_product/$product->id");
+        $request = $this->actingAs($user, "web")->delete("api/admin/delete_product", ["product_id" => $product->id]);
         $request->assertOk();
         $this->assertDatabaseCount($product, 0);
     }

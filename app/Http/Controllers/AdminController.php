@@ -50,9 +50,12 @@ class AdminController extends Controller
         return response()->json(["product edited"], 200);
     }
 
-    public function delete_product($id): \Illuminate\Http\JsonResponse
+    public function delete_product(): \Illuminate\Http\JsonResponse
     {
-        $product = Product::find($id);
+        $check_id = request()->validate([
+            "product_id" => "required"
+        ]);
+        $product = Product::find($check_id["product_id"]);
         if ($product == null)
             return response()->json(["product not found"], 404);
         else {
