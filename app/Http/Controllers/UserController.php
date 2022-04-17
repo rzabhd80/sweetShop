@@ -102,9 +102,12 @@ class UserController extends Controller
             "new email" => $user->email
         ], 200);
     }
-    public function buy_product($id)
+    public function buy_product()
     {
-        $product = Product::find($id);
+        $checked = request()->validate([
+            "product_id" => "required|integer"
+        ]);
+        $product = Product::find($checked["product_id"]);
         if ($product) {
             $product->available_count -= 1;
             return response()->json(["message" => "product bought"], 200);

@@ -30,15 +30,16 @@ class AdminController extends Controller
         ], 201);
     }
 
-    public function edit_product($id): \Illuminate\Http\JsonResponse
+    public function edit_product(): \Illuminate\Http\JsonResponse
     {
         $check = \request()->validate([
+            "product_id" => "required|exists:products,id",
             "new_name" => "required|min:3",
             "available" => "required",
             "available_number" => "required|int",
             "price" => "required|integer"
         ]);
-        $product = Product::find($id);
+        $product = Product::find($check["product_id"]);
         if ($product == null)
             return response()->json(["message" => "product not found"], 404);
         $product->name = $check["new_name"];
