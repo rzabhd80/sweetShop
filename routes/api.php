@@ -33,7 +33,6 @@ Route::prefix("/users")->group(function () {
     Route::put("/edit_password", [UserController::class, "edit_pass"]);
     Route::put("/edit_email", [UserController::class, "edit_email"]);
     Route::post("/buy_product", [UserController::class, "buy_product"]);
-    Route::post("/logout", [UserController::class, "logout"]);
 });
 
 Route::prefix("/admin")->middleware("adminRole")->group(function () {
@@ -42,8 +41,4 @@ Route::prefix("/admin")->middleware("adminRole")->group(function () {
     Route::delete("/delete_product", [\App\Http\Controllers\AdminController::class, "delete_product"]);
     Route::post("/addProductImg", [AdminController::class, "addProdImg"]);
     Route::post("/add_user", [\App\Http\Controllers\AdminController::class, "addUser"]);
-});
-
-Route::get("/rand", function () {
-    return request()->user();
 });

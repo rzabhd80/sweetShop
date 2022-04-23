@@ -103,7 +103,7 @@ class AdminTest extends TestCase
         $user = User::where("email", "sthRand@gmail.com")->first();
         $this->assertNotNull($user);
     }
-    public function test_admin_add_imageToPRoduct()
+    public function test_admin_add_imageToProduct()
     {
         $admin = User::create([
             "name" => "randName",

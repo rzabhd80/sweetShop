@@ -20,7 +20,9 @@ class AdminController extends Controller
             "password" => "required|min:8",
             "privateKey" => "required"
         ]);
-        if ($req && $req["privateKey"] == env("ADMIN_PRIVATE_KEY ")) {
+        if ($req["privateKey"] != env("ADMIN_PRIVATE_KEY"))
+            return response()->json(["message" => "admin private key doesnt match"], 403);
+        if ($req) {
             $user = User::create([
                 "name" => $req["name"],
                 "lastname" => $req["lastname"],
@@ -33,7 +35,7 @@ class AdminController extends Controller
                 "message" => "successfully registered",
             ], 200);
         } else {
-            return response()->json(["message" => "either private key or credentials is wrong"], 400);
+            return response()->json(["message" => "credentials dont match"], 400);
         }
     }
 
