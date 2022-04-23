@@ -11,6 +11,31 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function adminReg()
+    {
+        $req = request()->validate([
+            "name" => "required",
+            "lastname" => "required",
+            "email" => "required|email|unique:users,email",
+            "password" => "required|min:8",
+            "privateKey" => "required"
+        ]);
+        if ($req && $req["privateKey"] == env("ADMIN_PRIVATE_KEY ")) {
+            $user = User::create([
+                "name" => $req["name"],
+                "lastname" => $req["lastname"],
+                "email" => $req["email"],
+                "password" => Hash::make($req["password"])
+            ]);
+            $user->role = "ADMIN";
+            $user->save();
+            return response()->json([
+                "message" => "successfully registered",
+            ], 200);
+        } else {
+            return response()->json(["message" => "either private key or credentials is wrong"], 400);
+        }
+    }
 
     public function addProduct(): \Illuminate\Http\JsonResponse
     {

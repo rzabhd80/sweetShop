@@ -22,6 +22,7 @@ Route::get("/email/verify/{id}", [VerificationController::class, "verify"])->nam
 Route::get("email/resend", [VerificationController::class, "resend"])->name("verification.resend");
 
 Route::prefix("/auth")->group(function () {
+    Route::post("adminReg", [AdminController::class, "adminReg"]);
     Route::post("/register", [UserController::class, "register"]);
     Route::post("/login", [UserController::class, "login"]);
     Route::post("/logout", [UserController::class, "logout"])->middleware("auth:sanctum");
@@ -32,7 +33,7 @@ Route::prefix("/users")->group(function () {
     Route::put("/edit_password", [UserController::class, "edit_pass"]);
     Route::put("/edit_email", [UserController::class, "edit_email"]);
     Route::post("/buy_product", [UserController::class, "buy_product"]);
-    Route::post("/logout",[UserController::class,"logout"]);
+    Route::post("/logout", [UserController::class, "logout"]);
 });
 
 Route::prefix("/admin")->middleware("adminRole")->group(function () {
