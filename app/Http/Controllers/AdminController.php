@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -81,5 +83,20 @@ class AdminController extends Controller
         $user->role = "USER";
         $user->save();
         return response()->json(["message" => "user successfully created"], 200);
+    }
+    public function addImg()
+    {
+        $check = request()->validate([
+            "product_id" => "required|exists:products,id",
+            "file" => "required|file|mimes:png,jpg,jpeg",
+        ]);
+        if ($check) {
+            dd(request()->file());
+            $file = request()->file()->store("public/images");
+            $image = new Image();
+            $image->imageable_id = Auth()->user()->id;
+            $image->image_link = request()->file()->basename();
+            $image->save();
+        }
     }
 }

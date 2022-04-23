@@ -103,4 +103,26 @@ class AdminTest extends TestCase
         $user = User::where("email", "sthRand@gmail.com")->first();
         $this->assertNotNull($user);
     }
+    public function test_admin_add_imageToPRoduct()
+    {
+        $admin = User::create([
+            "name" => "randName",
+            "lastname" => "randLastname",
+            "email" => "rand_email",
+            "password" => Hash::create("randPassword")
+        ]);
+        $product = Product::create([
+            "name" => "fake_name",
+            "available" => 1,
+            "available_number" => "210",
+            "price" => "1000"
+        ]);
+        $product->save();
+        $admin->role = "ADMIN";
+        $admin->save();
+        $this->actingAs($admin, "web")->post("/api/admin/addProductImg", [
+            "product_id" => $product->id,
+            "image",
+        ]);
+    }
 }
