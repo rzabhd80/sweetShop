@@ -84,7 +84,7 @@ class AdminController extends Controller
         $user->save();
         return response()->json(["message" => "user successfully created"], 200);
     }
-    public function addImg()
+    public function addProdImg()
     {
         $check = request()->validate([
             "product_id" => "required|exists:products,id",

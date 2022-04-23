@@ -37,6 +37,6 @@ Route::prefix("/admin")->middleware("adminRole")->group(function () {
     Route::post("/new_product", [\App\Http\Controllers\AdminController::class, "addProduct"]);
     Route::put("/edit_product", [\App\Http\Controllers\AdminController::class, "edit_product"]);
     Route::delete("/delete_product", [\App\Http\Controllers\AdminController::class, "delete_product"]);
-    Route::post("/addProductImg", [AdminController::class, "addImage"]);
+    Route::post("/addProductImg", [AdminController::class,"addProdImg"]);
     Route::post("/add_user", [\App\Http\Controllers\AdminController::class, "addUser"]);
 });
