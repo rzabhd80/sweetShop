@@ -54,9 +54,9 @@ class UserController extends Controller
                 "message" => "user not found"
             ], 404);
         if (Hash::check($checked["password"], $user->password)) {
+            Auth::login($user);
             $token = $user->createToken("auth_token")->plainTextToken;
             return response()->json(["message" => "successfully logged in", "token" => $token], 200);
-            Auth::login($user);
         } else return response()->json(["message" => "incorrect password"], 403);
     }
 
