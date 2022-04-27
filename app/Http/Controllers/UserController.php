@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\WelcomeMail;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Js;
 use PharIo\Manifest\Email;
 
@@ -27,7 +29,7 @@ class UserController extends Controller
             "password" => "required|min:8"
         ]);
         if (!$checked)
-            return response()->json(["message" => "credintials do not match"]);
+            return response()->json(["message" => "credentials do not match"]);
         $user = new User();
         $user->name = $checked["name"];
         $user->lastname = $checked["lastname"];
@@ -35,7 +37,6 @@ class UserController extends Controller
         $user->password = Hash::make($checked["password"]);
         $user->save();
         if ($user != null) {
-            // Mail::to(request()->user())->send(new WelcomeMail($user));
             return response()->json(["message" => "user successfully created"], 200);
         } else
             return response()->json(["message" => "something went wrong"], 400);
@@ -54,9 +55,9 @@ class UserController extends Controller
                 "message" => "user not found"
             ], 404);
         if (Hash::check($checked["password"], $user->password)) {
-            auth()->login($user);
+            Auth::login($user);
             $token = $user->createToken("auth_token")->plainTextToken;
-            return response()->json(["message" => "successfully logged in", "token" => $token], 200);
+            return response()->json(["message" => "successfully logged in", "token" => $token,"logged in user"=>$user->email], 200);
         } else return response()->json(["message" => "incorrect password"], 403);
     }
 
