@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,70 +14,84 @@ use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
+
     /**
-     * A basic feature test example.
+     * creates fake user for testing
      *
-     * @return void
+     * @return User
+     *
+     * @author Reza
      */
+
+    private function createUser()
+    {
+        $user = User::create([
+            "name" => $this->faker()->name(),
+            "lastname" => $this->faker()->lastName(),
+            "email" => $this->faker()->email(),
+            "password" => Hash::make("temp_password")
+        ]);
+        $user->role = "USER";
+        $user->save();
+        return $user;
+    }
+
     public function test_register_user()
     {
+        $req = [
+            "name" => $this->faker()->name(),
+            "lastname" => $this->faker()->lastName(),
+            "email" => $this->faker()->email(),
+            "password" => "temp_password",
+        ];
         $this->withoutExceptionHandling();
-        $response = $this->postJson("api/auth/register", [
-
-            "name" => "what",
-            "lastname" => "the",
-            "email" => "fuck@user.com",
-            "password" => "password",
-        ]);
+        $response = $this->postJson("api/auth/register", $req);
         $response->assertOk();
-        $this->assertDatabaseCount(User::find(1), 1);
+        $user = User::where("email", $req["email"])->first();
+
+        $this->assertDatabaseHas("users", $user->getAttributes());
     }
     public function test_name_exists()
     {
         $response  = $this->postJson("/api/auth/register", [
-            "lastname" => "something",
-            "email" => "something@something.com",
-            "password" => "some random password"
+            "lastname" => $this->faker()->lastName(),
+            "email" => $this->faker()->email(),
+            "password" => $this->faker()->password()
         ]);
         $response->assertJsonValidationErrorFor("name");
     }
     public function test_lastname_exists()
     {
         $response = $this->postJson("/api/auth/register", [
-            "name" => "something",
-            "email" => "something@something.com",
-            "password" => "something random as password"
+            "name" => $this->faker()->name(),
+            "email" => $this->faker()->email(),
+            "password" => $this->faker()->password(),
         ]);
         $response->assertJsonValidationErrors("lastname");
     }
     public function test_email_exists()
     {
         $response = $this->postJson("/api/auth/register", [
-            "name" => "something",
-            "lastname" => "something rand",
-            "password" => "something random as password"
+            "name" => $this->faker()->name(),
+            "lastname" => $this->faker()->lastName(),
+            "password" => $this->faker()->password(),
         ]);
         $response->assertJsonValidationErrors("email");
     }
     public function test_proper_password_exists()
     {
         $response = $this->postJson("/api/auth/register", [
-            "name" => "something",
-            "lastname" => "something rand",
-            "lastname" => "email@email.com",
+            "name" => $this->faker()->name(),
+            "lastname" => $this->faker()->lastName(),
+            "email" => $this->faker()->email(),
             "password" => "wtf"
         ]);
         $response->assertJsonValidationErrors("password");
     }
     public function test_user_login()
     {
-        $user = User::create([
-            "name" => "temp_name",
-            "lastname" => "temp_lastname",
-            "email" => "temp@gmail.com",
-            "password" => Hash::make("temp_password")
-        ]);
+        $user = $this->createUser();
         $request = $this->post("/api/auth/login", [
             "email" => $user->email,
             "password" => "temp_password"
@@ -87,12 +102,7 @@ class UserTest extends TestCase
     public function test_user_logout()
     {
         $this->withoutExceptionHandling();
-        $user = User::create([
-            "name" => "temp_name",
-            "lastname" => "temp_lastname",
-            "email" => "temp@gmail.com",
-            "password" => Hash::make("temp_password")
-        ]);
+        $user = $this->createUser();
         $login_user = $this->post("/api/auth/login", [
             "email" => $user->email,
             "password" => "temp_password"
