@@ -118,7 +118,6 @@ class AdminController extends Controller
             "file" => "required|file|mimes:png,jpg,jpeg",
         ]);
         if ($check) {
-            dd(request()->file());
             $file = request()->file()->store("public/images");
             $image = new Image();
             $image->imageable_id = Auth()->user()->id;
