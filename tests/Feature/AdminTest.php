@@ -5,10 +5,13 @@ namespace Tests\Feature;
 use App\Http\Controllers\AdminController;
 use App\Models\Product;
 use App\Models\User;
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile as HttpUploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -116,9 +119,5 @@ class AdminTest extends TestCase
         $product->save();
         $admin->role = "ADMIN";
         $admin->save();
-        $this->actingAs($admin, "web")->post("/api/admin/addProductImg", [
-            "product_id" => $product->id,
-            "image",
-        ]);
     }
 }
